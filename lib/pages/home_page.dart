@@ -69,78 +69,79 @@ class _HomePageState extends State<HomePage> {
     }
 
     showModalBottomSheet(
-        context: ctx,
-        elevation: 5,
-        isScrollControlled: true,
-        builder: (_) => Container(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(ctx).viewInsets.bottom,
-                top: 30,
-                left: 15,
-                right: 15),
-            child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  TextField(
-                    controller: _titleController,
-                    decoration: const InputDecoration(hintText: 'Title'),
+      context: ctx,
+      elevation: 5,
+      isScrollControlled: true,
+      builder: (_) => Container(
+        padding: EdgeInsets.only(
+            bottom: MediaQuery.of(ctx).viewInsets.bottom,
+            top: 30,
+            left: 15,
+            right: 15),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(hintText: 'Title'),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(hintText: 'Description'),
+            ),
+            TextField(
+              controller: _dateInput,
+              decoration: const InputDecoration(
+                  icon: Icon(Icons.calendar_today),
+                  labelText: "Enter Date" //label text of field
                   ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: _descriptionController,
-                    decoration: const InputDecoration(hintText: 'Description'),
-                  ),
-                  TextField(
-                    controller: _dateInput,
-                    decoration: const InputDecoration(
-                        icon: Icon(Icons.calendar_today),
-                        labelText: "Enter Date" //label text of field
-                        ),
-                    readOnly: true,
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2023),
-                        lastDate: DateTime(2101),
-                      );
-                      if (pickedDate != null) {
-                        print(pickedDate);
-                        String formattedDate =
-                            DateFormat.yMMMEd().format(pickedDate);
-                        // print(formattedDate);
-                        setState(
-                          () {
-                            _dateInput.text = formattedDate;
-                          },
-                        );
-                      }
+              readOnly: true,
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2023),
+                  lastDate: DateTime(2101),
+                );
+                if (pickedDate != null) {
+                  print(pickedDate);
+                  String formattedDate = DateFormat.yMMMEd().format(pickedDate);
+                  // print(formattedDate);
+                  setState(
+                    () {
+                      _dateInput.text = formattedDate;
                     },
-                  ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        if (itemKey == null) {
-                          _createItem({
-                            'title': _titleController.text,
-                            'description': _descriptionController.text,
-                            'date': _dateInput.text
-                          });
-                        }
-                        if (itemKey != null) {
-                          _updateItem(itemKey, {
-                            'title': _titleController.text.trim(),
-                            'description': _descriptionController.text.trim(),
-                            'date': _dateInput.text.trim(),
-                          });
-                        }
-                        _titleController.text = '';
-                        _descriptionController.text = '';
-                        _dateInput.text = '';
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Create New'))
-                ])));
+                  );
+                }
+              },
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  if (itemKey == null) {
+                    _createItem({
+                      'title': _titleController.text,
+                      'description': _descriptionController.text,
+                      'date': _dateInput.text
+                    });
+                  }
+                  if (itemKey != null) {
+                    _updateItem(itemKey, {
+                      'title': _titleController.text.trim(),
+                      'description': _descriptionController.text.trim(),
+                      'date': _dateInput.text.trim(),
+                    });
+                  }
+                  _titleController.text = '';
+                  _descriptionController.text = '';
+                  _dateInput.text = '';
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Create New'))
+          ]),
+      ),
+    );
   }
 
   @override

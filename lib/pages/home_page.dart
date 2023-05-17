@@ -83,40 +83,41 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   TextField(
-                      controller: _titleController,
-                      decoration: const InputDecoration(hintText: 'Title')),
+                    controller: _titleController,
+                    decoration: const InputDecoration(hintText: 'Title'),
+                  ),
                   const SizedBox(height: 10),
                   TextField(
                     controller: _descriptionController,
                     decoration: const InputDecoration(hintText: 'Description'),
                   ),
                   TextField(
-                      controller: _dateInput,
-                      //editing controller of this TextField
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.calendar_today),
-                          //icon of text field
-                          labelText: "Enter Date" //label text of field
-                          ),
-                      readOnly: true,
-                      //set it true, so that user will not able to edit text
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2023),
-                            //DateTime.now() - not to allow to choose before today.
-                            lastDate: DateTime(2101));
-                        if (pickedDate != null) {
-                          print(pickedDate);
-                          String formattedDate =
-                              DateFormat.yMMMEd().format(pickedDate);
-                          // print(formattedDate);
-                          setState(() {
+                    controller: _dateInput,
+                    decoration: const InputDecoration(
+                        icon: Icon(Icons.calendar_today),
+                        labelText: "Enter Date" //label text of field
+                        ),
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2023),
+                        lastDate: DateTime(2101),
+                      );
+                      if (pickedDate != null) {
+                        print(pickedDate);
+                        String formattedDate =
+                            DateFormat.yMMMEd().format(pickedDate);
+                        // print(formattedDate);
+                        setState(
+                          () {
                             _dateInput.text = formattedDate;
-                          });
-                        }
-                      }),
+                          },
+                        );
+                      }
+                    },
+                  ),
                   ElevatedButton(
                       onPressed: () async {
                         if (itemKey == null) {
@@ -150,7 +151,6 @@ class _HomePageState extends State<HomePage> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(100.0),
           child: AppBar(
-            //elevation: 0,
             backgroundColor: Colors.pink,
             title: const Text('To Do List',
                 style: TextStyle(
@@ -158,44 +158,62 @@ class _HomePageState extends State<HomePage> {
             toolbarHeight: 120,
           )),
       body: Stack(children: [
-        Center(child: Image.asset('assets/images/todo.png')),
+        Center(
+          child: Image.asset('assets/images/todo.png'),
+        ),
         Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: ListView.builder(
-                itemCount: _items.length,
-                itemBuilder: (_, index) {
-                  final currentItem = _items[index];
-                  return Card(
-                      color: Colors.white60,
-                      margin: EdgeInsets.all(10),
-                      elevation: 3,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ListTile(
-                                title: Text(currentItem['title'].toString()),
-                                subtitle:
-                                    Text(currentItem['description'].toString()),
-                                trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                          icon: Icon(Icons.edit),
-                                          onPressed: () => _showForm(
-                                              context, currentItem['key'])),
-                                      IconButton(
-                                          icon: Icon(Icons.delete),
-                                          onPressed: () =>
-                                              _deleteItem(currentItem['key'])),
-                                    ])),
-                            Padding(
-                              padding: EdgeInsets.only(left: 15, bottom: 10),
-                              child: Text(currentItem['date'].toString(),
-                                  style: TextStyle(color: Colors.pink)),
-                            )
-                          ]));
-                }))
+          padding: EdgeInsets.only(top: 20),
+          child: ListView.builder(
+            itemCount: _items.length,
+            itemBuilder: (_, index) {
+              final currentItem = _items[index];
+              return Card(
+                color: Colors.white60,
+                margin: EdgeInsets.all(10),
+                elevation: 3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListTile(
+                      title: Text(
+                        currentItem['title'].toString(),
+                      ),
+                      subtitle: Text(
+                        currentItem['description'].toString(),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () => _showForm(
+                              context,
+                              currentItem['key'],
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () => _deleteItem(
+                              currentItem['key'],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, bottom: 10),
+                      child: Text(
+                        currentItem['date'].toString(),
+                        style: TextStyle(color: Colors.pink),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showForm(context, null),
